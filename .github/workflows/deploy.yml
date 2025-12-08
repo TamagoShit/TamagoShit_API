@@ -16,11 +16,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Create .env file
-        run: |
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
-          echo "PORT=${{ secrets.PORT }}" >> .env
-      
       - name: Trigger Render deployment
         run: |
           curl --request POST \
