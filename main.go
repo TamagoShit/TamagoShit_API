@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -12,7 +13,12 @@ import (
 
 func main() {
 	// Database connection
-	dsn := "root:Lutin02!@tcp(localhost:3306)/TamagoShit?charset=utf8mb4&parseTime=True&loc=Local"
+	dbPassword := os.Getenv("DB_PASSWORD")
+	if dbPassword == "" {
+		log.Fatal("DB_PASSWORD environment variable is not set")
+	}
+
+	dsn := fmt.Sprintf("root:%s@tcp(localhost:3306)/TamagoShit?charset=utf8mb4&parseTime=True&loc=Local", dbPassword)
 	var err error
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
