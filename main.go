@@ -12,7 +12,7 @@ import (
 
 func main() {
 	// Database connection
-	dsn := "general_user:password@tcp(localhost:3306)/tamagoshit_db?charset=utf8mb4&parseTime=True&loc=Local" // Update with actual credentials
+	dsn := "root:Lutin02!@tcp(localhost:3306)/TamagoShit?charset=utf8mb4&parseTime=True&loc=Local"
 	var err error
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -62,7 +62,7 @@ func main() {
 	// Start the server
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "3000"
+		port = "8080"
 	}
 	log.Fatal(app.Listen(":" + port))
 }
