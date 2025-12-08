@@ -9,7 +9,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-var jwtSecret = []byte("your-secret-key") // Change this to a secure key
+// jwtSecret is loaded from JWT_SECRET environment variable in main.go init()
 
 type Claims struct {
 	UserID int    `json:"user_id"`
@@ -70,7 +70,7 @@ func Login(c *fiber.Ctx) error {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtSecret)
+	tokenString, err := token.SignedString(JWTSecret)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to generate token"})
 	}
@@ -91,7 +91,7 @@ func AuthMiddleware(c *fiber.Ctx) error {
 	}
 
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
-		return jwtSecret, nil
+		return JWTSecret, nil
 	})
 	if err != nil || !token.Valid {
 		return c.Status(401).JSON(fiber.Map{"error": "Invalid token"})

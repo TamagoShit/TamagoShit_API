@@ -1,28 +1,43 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
-	"gorm.io/driver/mysql"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func main() {
-	// Database connection
-	godotenv.Load("/opt/tamagoshit_api/.env")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	if dbPassword == "" {
-		log.Fatal("DB_PASSWORD environment variable is not set")
+var (
+	JWTSecret []byte
+)
+
+func init() {
+	// Load environment variables from .env file
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, reading from system environment")
 	}
 
-	dsn := fmt.Sprintf("root:%s@tcp(localhost:3306)/TamagoShit?charset=utf8mb4&parseTime=True&loc=Local", dbPassword)
+	// Load JWT secret
+	// secret := os.Getenv("JWT_SECRET")
+	// if secret == "" {
+	// 	log.Fatal("JWT_SECRET environment variable is not set")
+	// }
+	// JWTSecret = []byte(secret)
+}
+
+func main() {
+	// Database connection
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		log.Fatal("DATABASE_URL environment variable is not set")
+	}
+
 	var err error
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(dbURL), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
