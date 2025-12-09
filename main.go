@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -15,6 +16,11 @@ var (
 )
 
 func init() {
+	// Try to load environment variables from Render's secrets file
+	if err := godotenv.Load("/etc/secrets/.env"); err != nil {
+		log.Printf("Warning: Could not load .env file from /etc/secrets/.env: %v", err)
+		log.Println("Falling back to system environment variables")
+	}
 
 	// Load JWT secret
 	// secret := os.Getenv("JWT_SECRET")
