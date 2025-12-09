@@ -6,7 +6,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -16,10 +15,6 @@ var (
 )
 
 func init() {
-	// Load environment variables from .env file
-	if err := godotenv.Load(); err != nil {
-		log.Println("No .env file found, reading from system environment")
-	}
 
 	// Load JWT secret
 	// secret := os.Getenv("JWT_SECRET")
@@ -30,7 +25,7 @@ func init() {
 }
 
 func main() {
-	// Database connection
+	// Get DATABASE_URL from environment variables
 	dbURL := os.Getenv("DATABASE_URL")
 	if dbURL == "" {
 		log.Fatal("DATABASE_URL environment variable is not set")
