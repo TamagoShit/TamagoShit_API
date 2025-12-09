@@ -20,6 +20,10 @@ type User struct {
 	Role               string     `json:"role" gorm:"default:'general'"` // Added for authorization
 }
 
+func (User) TableName() string {
+	return "Users"
+}
+
 type Tama struct {
 	TamaId      int        `json:"tama_id" gorm:"primaryKey;autoIncrement"`
 	UserId      int        `json:"user_id" gorm:"not null"`
@@ -36,6 +40,10 @@ type Tama struct {
 	TamaStats   TamaStats  `gorm:"foreignKey:TamaStatsID"`
 }
 
+func (Tama) TableName() string {
+	return "tamas"
+}
+
 type TamaStats struct {
 	TamaStatId    int     `json:"tama_stat_id" gorm:"primaryKey;autoIncrement"`
 	Food          int     `json:"food" gorm:"default:0"`
@@ -48,12 +56,20 @@ type TamaStats struct {
 	PersonalSatis float64 `json:"personal_satis" gorm:"default:0"`
 }
 
+func (TamaStats) TableName() string {
+	return "Tama_stats"
+}
+
 type Friend struct {
 	UserID            int       `json:"user_id" gorm:"primaryKey"`
 	FriendID          int       `json:"friend_id" gorm:"primaryKey"`
 	DateBecameFriends time.Time `json:"date_became_friends" gorm:"default:CURRENT_DATE"`
 	User              User      `gorm:"foreignKey:UserID"`
 	Friend            User      `gorm:"foreignKey:FriendID"`
+}
+
+func (Friend) TableName() string {
+	return "Friends"
 }
 
 type Sponsor struct {
@@ -64,12 +80,20 @@ type Sponsor struct {
 	SponsoredUser User      `gorm:"foreignKey:SponsoredId"`
 }
 
+func (Sponsor) TableName() string {
+	return "Sponsor"
+}
+
 type Race struct {
 	RaceId int     `json:"race_id" gorm:"primaryKey;autoIncrement"`
 	Name   string  `json:"name" gorm:"unique;not null"`
 	Desc   *string `json:"desc"`
 	Bonus  *string `json:"bonus"`
 	Malus  *string `json:"malus"`
+}
+
+func (Race) TableName() string {
+	return "Race"
 }
 
 type Sickness struct {
@@ -81,12 +105,20 @@ type Sickness struct {
 	Malus          *string `json:"malus"`
 }
 
+func (Sickness) TableName() string {
+	return "Sickness"
+}
+
 type Trait struct {
 	TraitId int     `json:"trait_id" gorm:"primaryKey;autoIncrement"`
 	Name    string  `json:"name" gorm:"not null"`
 	Desc    *string `json:"desc"`
 	Bonus   *string `json:"bonus"`
 	Malus   *string `json:"malus"`
+}
+
+func (Trait) TableName() string {
+	return "Trait"
 }
 
 type Bonus struct {
@@ -96,11 +128,19 @@ type Bonus struct {
 	Effect  string  `json:"effect"`
 }
 
+func (Bonus) TableName() string {
+	return "Bonus"
+}
+
 type Malus struct {
 	MalusId int     `json:"malus_id" gorm:"primaryKey;autoIncrement"`
 	Name    string  `json:"name" gorm:"not null"`
 	Desc    *string `json:"desc"`
 	Effect  string  `json:"effect"`
+}
+
+func (Malus) TableName() string {
+	return "Malus"
 }
 
 type Event struct {
@@ -111,11 +151,19 @@ type Event struct {
 	Malus   *string `json:"malus"`
 }
 
+func (Event) TableName() string {
+	return "Event"
+}
+
 type LifeChoice struct {
 	LifeChoicesId int     `json:"life_choices_id" gorm:"primaryKey;autoIncrement"`
 	Name          string  `json:"name" gorm:"not null"`
 	Desc          *string `json:"desc"`
 	Traits        *string `json:"traits"`
+}
+
+func (LifeChoice) TableName() string {
+	return "LifeChoices"
 }
 
 var DB *gorm.DB
