@@ -229,9 +229,25 @@ func CreateTama(c *fiber.Ctx) error {
 	userID := c.Locals("user_id").(int)
 	tama.UserId = userID
 
+	// Create TamaStats first
+	tamaStats := TamaStats{}
+	if err := DB.Create(&tamaStats).Error; err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to create tama stats"})
+	}
+
+	// Assign the created TamaStats ID to the Tama
+	tama.TamaStatsID = tamaStats.TamaStatId
+
+	// Create Tama with the associated TamaStats
 	if err := DB.Create(tama).Error; err != nil {
+		// If Tama creation fails, clean up the TamaStats
+		DB.Delete(&tamaStats)
 		return c.Status(500).JSON(fiber.Map{"error": "Failed to create tama"})
 	}
+
+	// Load the associations for the response
+	DB.Preload("User").Preload("TamaStats").First(tama, tama.TamaId)
+
 	return c.Status(201).JSON(tama)
 }
 

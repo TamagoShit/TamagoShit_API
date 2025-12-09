@@ -22,12 +22,13 @@ func init() {
 		log.Println("Falling back to system environment variables")
 	}
 
-	// Load JWT secret
-	// secret := os.Getenv("JWT_SECRET")
-	// if secret == "" {
-	// 	log.Fatal("JWT_SECRET environment variable is not set")
-	// }
-	// JWTSecret = []byte(secret)
+	// Load JWT secret from environment or use default
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		log.Println("Warning: JWT_SECRET not set, using default secret (not recommended for production)")
+		secret = "your-default-jwt-secret-change-this-in-production"
+	}
+	JWTSecret = []byte(secret)
 }
 
 func main() {
